@@ -1,6 +1,6 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          kafka 
+# Provides:          kafka
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -27,7 +27,7 @@ CONFIG="/etc/kafka/server.properties"
 #KAFKA_OPTS="-Xmx512M -server  -Dlog4j.configuration=file:/etc/kafka/log4j.properties"
 #export KAFKA_OPTS
 
-BASEDIR="/opt/kafka"
+BASEDIR="/usr/lib/kafka"
 
 START="${BASEDIR}/bin/kafka-server-start.sh"
 STOP="${BASEDIR}/bin/kafka-server-stop.sh"
@@ -52,7 +52,7 @@ do_start() {
 
   start-stop-daemon --start --verbose -m -b --chuid $USER --chdir $KAFKA_HOME --pidfile $PIDFILE --exec $START $CONFIG --test > /dev/null \
     || return 1
-  
+
   start-stop-daemon --start --verbose -m -b --chuid $USER --chdir $KAFKA_HOME --pidfile $PIDFILE --exec $START $CONFIG \
     || return 2
 }
@@ -68,10 +68,10 @@ do_stop()
   #   2 if daemon could not be stopped
   #   other if a failure occurred
   start-stop-daemon --stop  --retry=TERM/30/KILL/5 --pidfile $PIDFILE
- 
+
   RETVAL="$?"
   [ "$RETVAL" = 2 ] && return 2
- 
+
   # Many daemons don't delete their pidfiles when they exit.
   rm -f $PIDFILE
   return "$RETVAL"
@@ -128,7 +128,7 @@ restart|force-reload)
       ;;
   esac
   ;;
-  
+
 status)
   status_of_proc -p $PIDFILE && exit 0 || exit $?
   ;;
@@ -137,5 +137,5 @@ status)
   echo $"Usage: $0 {start|stop|status|restart|force-reload}" >&2
   exit 3
   ;;
-  
+
 esac
