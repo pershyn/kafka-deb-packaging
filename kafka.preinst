@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# if there is no kafka user - create one, 
+# if there is no kafka user - create one,
 # home folder creation is managed by packet
 # TODO: questionable if --ingroup parameter should be used instead of --group
 if ! getent passwd kafka > /dev/null; then
@@ -9,7 +9,7 @@ if ! getent passwd kafka > /dev/null; then
   echo "Creating kafka user account and group"
   addgroup --quiet kafka
 
-  adduser --system --quiet --home /opt/kafka --no-create-home \
+  adduser --system --quiet --home /usr/lib/kafka --no-create-home \
     --shell /bin/bash --ingroup kafka \
     --gecos "Kafka message broker" kafka
 fi
@@ -26,4 +26,3 @@ fi
 [ "$1" = "configure" ] && ldconfig
 
 exit 0
-
