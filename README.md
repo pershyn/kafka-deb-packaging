@@ -85,3 +85,9 @@ docker run -t -i --rm --name kafka-deb-builder -v ${PWD}:/mnt/workdir kafka-deb-
 Run `./build.sh` in docker.
 
 The script will create a kafka package in project directory and also `SAMPLE_LAYOUT.txt` from the package.
+
+
+## TODO:
+
+- drop upstart (since ubuntu is not going to use it anymore)
+- drop patching kafka bin
