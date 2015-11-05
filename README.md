@@ -89,5 +89,7 @@ The script will create a kafka package in project directory and also `SAMPLE_LAY
 
 ## TODO:
 
-- drop upstart (since ubuntu is not going to use it anymore)
-- drop patching kafka bin
+- cleanup
+- use pushd build in bootstrap()
+- add a notes about environment in README
+- check the fixes of init scripts from forks and merge them in

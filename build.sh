@@ -35,10 +35,6 @@ function download() {
 }
 
 function bootstrap() {
-    # if [[ ! -f "$SRC_PACKAGE" ]]; then
-    #     wget ${DOWNLOAD_URL}
-    # fi
-
     mkdir -p tmp
     pushd tmp
     rm -rf kafka
@@ -120,8 +116,6 @@ function apply_configs(){
 
     # Service
     cp "${ORIG_DIR}/etc/init.d/kafka" "build/etc/init.d/kafka"
-    # TODO: Ubuntu option?
-    #cp "${ORIG_DIR}/kafka-broker.upstart.conf" "build/etc/init/kafka-broker.conf"
 
     cp ${ORIG_DIR}/log4j.properties build/etc/kafka
     popd
