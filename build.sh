@@ -3,48 +3,18 @@ set -e
 set -u
 
 PKG_NAME="kafka"
-VERSION="0.8.1"
+VERSION="0.8.2.2"
+PACKAGE_SUFFIX="0"
 DESCRIPTION="Apache Kafka is a distributed publish-subscribe messaging system."
 URL="https://kafka.apache.org/"
 ARCH="all"
 SECTION="misc"
 LICENSE="Apache Software License 2.0"
 SRC_PACKAGE="kafka-${VERSION}-src.tgz"
-DOWNLOAD_URL="https://dist.apache.org/repos/dist/release/kafka/${VERSION}/${SRC_PACKAGE}"
+DOWNLOAD_URL="http://www.us.apache.org/dist/kafka/${VERSION}/${SRC_PACKAGE}"
 ORIG_DIR="$(pwd)"
-BUILD_VERSION=
-SCALA_VERSION="2.8.0"
+SCALA_VERSION="2.10.0"
 
-usage() {
-    echo "Usage: $0 -b \"<build version>\" -h"
-    echo "    -h Prints this message"
-    echo "    -b Build version string, ex: ubuntu1"
-}
-
-while getopts ":b:h" NAME; do
-    case "$NAME" in
-        b)
-            BUILD_VERSION=${OPTARG}
-            ;;
-        h)
-            usage
-            exit 0
-            ;;
-        *)
-            echo "Unkown option: $OPTARG"
-            echo ""
-            usage
-            exit 1
-            ;;
-    esac
-done
-
-if [ "x$BUILD_VERSION" = "x" ]; then
-    echo "No build version was supplied"
-    echo ""
-    usage
-    exit 1
-fi
 
 #_ MAIN _#
 function cleanup() {
@@ -53,7 +23,7 @@ function cleanup() {
 
 function bootstrap() {
     if [[ ! -f "$SRC_PACKAGE" ]]; then
-        wget "$DOWNLOAD_URL"
+        wget ${DOWNLOAD_URL}
     fi
 
     mkdir -p tmp && pushd tmp
@@ -106,7 +76,7 @@ function build_from_sources() {
 function build_from_binary(){
     BINARY_PACKAGE=kafka_2.9.2-0.8.1
 
-    wget https://dist.apache.org/repos/dist/release/kafka/0.8.1/${BINARY_PACKAGE}.tgz
+    wget http://dist.apache.org/repos/dist/release/kafka/0.8.1/${BINARY_PACKAGE}.tgz
     tar -xzf ${BINARY_PACKAGE}.tgz
 
     mv ${BINARY_PACKAGE}/* build/opt/kafka
@@ -133,7 +103,7 @@ function mkdeb() {
 
   fpm -t deb \
     -n "$PKG_NAME" \
-    -v "${VERSION}-${BUILD_VERSION}" \
+    -v "${VERSION}-${PACKAGE_SUFFIX}" \
     --description "$DESCRIPTION" \
     --url="$URL" \
     -a "$ARCH" \
