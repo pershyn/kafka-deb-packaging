@@ -9,17 +9,16 @@ Adds debian init scripts, kafka's user management, etc.
 ## Kafka user management
 
 According to debian guidelines kafka user will not be dropped on package deletion - only locked (postrm script).
-On installation of a package the user will be created, if not exists. If it exists - unlocked.
+
+On installation of a package the user will be created, if not exists. 
+If it exists - unlocked.
 
 ## Kafka folders and binary locations
 
 Kafka scripts are heavily using the `$base_dir` to refer to jars.
-As of kafka 0.8.1 the '$base_dir' is hardcoded to be the parent folder of `bin`.
+As of kafka 0.8.1 the `$base_dir` is hardcoded to be the parent folder of `bin`.
 
-Some other scripts on github have kafka packaged to `/usr/lib/kafka` (and they have `bin`, and `libs` inside), this approach does not comply with FHS.
-
-Following [Filesystem Hierarchy Standard](http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard)  [here](http://www.pathname.com/fhs/): `/opt` is for programs that are not packaged and don't follow the standards. You'd just put all the libraries there together with the program - this is exactly the situation with kafka.
-
+Some other scripts on github have kafka packaged to `/usr/lib/kafka` (and they have `bin`, and `libs` inside), this approach does not comply with [FHS](http://www.pathname.com/fhs/).
 ```
 |                        | This package          | Developers
 -------------------------------------------------------------
