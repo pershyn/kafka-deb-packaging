@@ -41,7 +41,8 @@ I don't like that bins are in `/usr/lib/kafka/bin` and not in `/usr/bin`, but th
 
 I am looking forward to have kafka fully compatible to FHS.
 
-So far there are several symlinks in the package to make closer to FHS.
+So far there are several symlinks in the package to make the package a little closer to the FHS.
+
 ```bash
 # assume $base_dir is /usr/lib/kafka/
 
@@ -82,3 +83,5 @@ docker run -t -i --rm --name kafka-deb-builder -v ${PWD}:/mnt/workdir kafka-deb-
 ```
 
 Run `./build.sh` in docker.
+
+The script will create a kafka package in project directory and also `SAMPLE_LAYOUT.txt` from the package.

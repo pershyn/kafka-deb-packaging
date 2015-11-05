@@ -2,8 +2,8 @@
 set -e
 
 # Create a symlink to kafka config in kafka distribution folder
-if [ ! -e "/opt/kafka/config" ]; then
-    ln -s /opt/kafka/config /etc/kafka
+if [ ! -e "/usr/lib/kafka/config" ]; then
+    ln -s /etc/kafka /usr/lib/kafka/config
 fi
 
 # Create a directory to store working data
@@ -14,7 +14,7 @@ fi
 #chown -R kafka:kafka /var/log/kafka
 
 # Set permissions on directories
-/bin/chown -R kafka:kafka /opt/kafka /var/log/kafka /var/lib/kafka
+/bin/chown -R kafka:kafka /usr/lib/kafka /var/log/kafka /var/lib/kafka
 
 #DEBHELPER#
 
