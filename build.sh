@@ -3,7 +3,7 @@ set -e
 set -u
 
 PKG_NAME="kafka"
-VERSION="0.8.2.2"
+VERSION="0.10.0.1"
 BINARY_PACKAGE="kafka_2.10-${VERSION}"
 BINARY_PACKAGE_URL="http://www.us.apache.org/dist/kafka/${VERSION}/${BINARY_PACKAGE}.tgz"
 # SCALA_VERSION="2.10.0"
@@ -53,8 +53,7 @@ function bootstrap() {
     # used a link in /opt/kafka/config to  build/etc/kafka
     mkdir -p build/etc/kafka # will be later linked from konfig
     mkdir -p build/etc/default
-
-    mkdir -p build/etc/init.d    # for init script on debian
+    mkdir -p build/lib/systemd/system # for kafka.service systemd unit
     mkdir -p build/var/log/kafka # for log files
 
     mkdir -p build/usr/share/doc/kafka/ # for docs
@@ -63,36 +62,6 @@ function bootstrap() {
     popd
     popd
 }
-
-# # gets sources, builds project, forms the ../build, leaves to initial folder after
-# function build_from_sources() {
-#     tar zxf "${ORIG_DIR}/${SRC_PACKAGE}"
-#     pushd "kafka-${VERSION}-src"
-#
-#     ./gradlew -PscalaVersion=${SCALA_VERSION} clean
-#     ./gradlew -PscalaVersion=${SCALA_VERSION} jar
-#
-#     # KAFKA_HEAP_OPTS is reset to default.
-#     # The patch should fix the ./logs creation though.
-#     # TODO: fix and apply patch
-#     # patch -p0 < "${ORIG_DIR}/kafka-bin.patch"
-#
-#     ## populate the /opt/kafka folder structure
-#     # libs
-#     cp -rp core/build/libs/* ../build/opt/kafka/libs
-#     cp -rp core/build/dependant-libs-${SCALA_VERSION}/* ../build/opt/kafka/libs
-#     # config
-#     cp -rp config ../build/opt/kafka/
-#     mv ../build/opt/kafka/config/log4j.properties ../build/opt/kafka/config/log4j.properties.orig
-#     cp ${ORIG_DIR}/log4j.properties ../build/opt/kafka/config
-#     # bin (we don't need windows binaries)
-#     cp bin/*.sh ../build/opt/kafka/bin
-#
-#     # LICENSE and NOTICE
-#     mv LICENSE ../build/opt/kafka/
-#     mv NOTICE ../build/opt/kafka
-#     popd
-# }
 
 function build_from_binary(){
   # assumed we are in tmp/kafka direcotry
@@ -115,15 +84,16 @@ function apply_configs(){
     cp "${ORIG_DIR}/etc/default/kafka" "build/etc/default/kafka"
 
     # Service
-    cp "${ORIG_DIR}/etc/init.d/kafka" "build/etc/init.d/kafka"
+    cp "${ORIG_DIR}/lib/systemd/system/kafka.service" "build/lib/systemd/system/kafka.service"
 
-    cp ${ORIG_DIR}/log4j.properties build/etc/kafka
+    cp ${ORIG_DIR}/etc/kafka/log4j.properties build/etc/kafka
     popd
     popd
 
     # symlink from /etc/kafka -> /opt/kafka/config is made in postinst
 }
 
+# TODO: is kafka.service a "config" file?
 function mkdeb() {
   pushd tmp
   pushd kafka
@@ -143,7 +113,7 @@ function mkdeb() {
     --after-remove ${ORIG_DIR}/kafka.postrm \
     -m "${MAINTAINER}" \
     --config-files /etc/default/kafka \
-    --config-files /etc/init.d/kafka \
+    --config-files /lib/systemd/system/kafka.service \
     --config-files /etc/kafka \
     --prefix=/ \
     -d "openjdk-7-jre" \
