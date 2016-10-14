@@ -1,8 +1,6 @@
-#_ START? _#
-ENABLE="yes"
-ulimit -n 30000
-KAFKA_LOG4J_OPTS="-Dlog4j.configuration=file:/etc/kafka/log4j.properties"
+# systemd environment file
 
+KAFKA_LOG4J_OPTS="-Dlog4j.configuration=file:/etc/kafka/log4j.properties"
 KAFKA_HEAP_OPTS="-Xmx512M"
 
-# export JMX_PORT="19092"
+#JMX_PORT="19092"
